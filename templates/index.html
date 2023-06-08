@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Docker Manager</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        h1, h2 {
+            margin-bottom: 20px;
+        }
+
+        .container-info {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Docker Manager</h1>
+        <h2>All Containers</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for container in containers %}
+                    <tr>
+                        <td>{{ container.name }}</td>
+                        <td>{{ container.status }}</td>
+                        <td>{{ container.image }}</td>
+                        <td>
+                            {% if container.status == 'running' %}
+                                <a class="btn btn-danger" href="/stop/{{ container.id }}">Stop</a>
+                            {% elif container.status == 'exited' %}
+                                <a class="btn btn-success" href="/start/{{ container.id }}">Start</a>
+                            {% endif %}
+                            <a class="btn btn-secondary" href="/delete/{{ container.id }}">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h2>Create Container</h2>
+        <form action="/create" method="post">
+            <div class="mb-3">
+                <label for="image" class="form-label">Image:</label>
+                <select id="image" name="image" class="form-select">
+                    {% for image in images %}
+                        <option value="{{ image }}">{{ image }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <input type="text" id="name" name="name" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="port" class="form-label">Port:</label>
+                <input type="text" id="port" name="port" class="form-control">
+            </div>
+            <div class="mb-3">
+                <input type="submit" value="Create" class="btn btn-primary">
+            </div>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
