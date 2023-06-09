@@ -36,6 +36,7 @@
                     <th>Name</th>
                     <th>Status</th>
                     <th>Image</th>
+                    <th>Port</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -45,10 +46,11 @@
                         <td>{{ container.name }}</td>
                         <td>{{ container.status }}</td>
                         <td>{{ container.image }}</td>
+                        <td>{{ container.port }}</td>
                         <td>
                             {% if container.status == 'running' %}
                                 <a class="btn btn-danger" href="/stop/{{ container.id }}">Stop</a>
-                            {% elif container.status == 'exited' %}
+                            {% elif container.status == 'exited' or container.status == 'created' %}
                                 <a class="btn btn-success" href="/start/{{ container.id }}">Start</a>
                             {% endif %}
                             <a class="btn btn-secondary" href="/delete/{{ container.id }}">Delete</a>
