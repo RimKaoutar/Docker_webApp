@@ -4,7 +4,6 @@ import docker
 app = Flask(__name__)
 client = docker.from_env()
 
-
 @app.route('/')
 def index():
     containers = client.containers.list(all=True)
@@ -21,6 +20,18 @@ def start_container(id):
 def stop_container(id):
     container = client.containers.get(id)
     container.stop()
+    return redirect(url_for('index'))
+
+@app.route('/pause/<id>')
+def pause_container(id):
+    container = client.containers.get(id)
+    container.pause()
+    return redirect(url_for('index'))
+
+@app.route('/unpause/<id>')
+def unpause_container(id):
+    container = client.containers.get(id)
+    container.unpause()
     return redirect(url_for('index'))
 
 @app.route('/create', methods=['POST'])
@@ -46,4 +57,3 @@ def delete_container(id):
 
 if __name__ == '__main__':
     app.run(debug=True)
-

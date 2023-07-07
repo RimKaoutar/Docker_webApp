@@ -48,6 +48,9 @@
                         <td>
                             {% if container.status == 'running' %}
                                 <a class="btn btn-danger" href="/stop/{{ container.id }}">Stop</a>
+                                <a class="btn btn-warning" href="/pause/{{ container.id }}">Pause</a>
+                            {% elif container.status == 'paused' %}
+                                <a class="btn btn-success" href="/unpause/{{ container.id }}">Resume</a>
                             {% elif container.status == 'exited' %}
                                 <a class="btn btn-success" href="/start/{{ container.id }}">Start</a>
                             {% endif %}
@@ -85,4 +88,3 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
