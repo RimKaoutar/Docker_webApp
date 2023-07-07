@@ -23,19 +23,30 @@ def stop_container(id):
     container.stop()
     return redirect(url_for('index'))
 
+
 @app.route('/create', methods=['POST'])
 def create_container():
     image = request.form['image']
     name = request.form['name']
-    port = request.form['port']
-    container = client.containers.create(
-        image=image,
-        name=name,
-        ports={'80/tcp': port},
-        detach=True
-    )
+    port = int(request.form['port'])
+    
+    if port:
+        container = client.containers.create(
+            image=image,
+            name=name,
+            ports={f'{port}/tcp': port},
+            detach=True
+        )
+    else:
+        container = client.containers.create(
+            image=image,
+            name=name,
+            detach=True
+        )
+        
     container.start()
     return redirect(url_for('index'))
+
 
 @app.route('/delete/<id>')
 def delete_container(id):

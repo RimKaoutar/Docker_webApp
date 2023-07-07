@@ -46,11 +46,26 @@
                         <td>{{ container.name }}</td>
                         <td>{{ container.status }}</td>
                         <td>{{ container.image }}</td>
-                        <td>{{ container.port }}</td>
+                        <td>
+    {% if 'Ports' in container.attrs %}
+        {% if container.attrs.Ports %}
+            {% for port in container.attrs.Ports %}
+                {% if port.PublicPort %}
+                    {{ port.PublicPort }} ({{ port.PrivatePort }})
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            None
+        {% endif %}
+    {% else %}
+        None
+    {% endif %}
+</td>
+
                         <td>
                             {% if container.status == 'running' %}
                                 <a class="btn btn-danger" href="/stop/{{ container.id }}">Stop</a>
-                            {% elif container.status == 'exited' or container.status == 'created' %}
+                            {% elif container.status == 'exited'  %}
                                 <a class="btn btn-success" href="/start/{{ container.id }}">Start</a>
                             {% endif %}
                             <a class="btn btn-secondary" href="/delete/{{ container.id }}">Delete</a>
