@@ -48,12 +48,18 @@
                         <td>{{ container.image }}</td>
                         <td>
     {% if 'Ports' in container.attrs %}
-        {% if container.attrs.Ports %}
-            {% for port in container.attrs.Ports %}
-                {% if port.PublicPort %}
-                    {{ port.PublicPort }} ({{ port.PrivatePort }})
+        {% set host_port = None %}
+        {% set found = false %}
+        {% for port, mappings in container.attrs.Ports.items() %}
+            {% if mappings and 'HostPort' in mappings[0] %}
+                {% if not found %}
+                    {% set host_port = mappings[0].HostPort %}
+                    {% set found = true %}
                 {% endif %}
-            {% endfor %}
+            {% endif %}
+        {% endfor %}
+        {% if host_port %}
+            {{ host_port }}
         {% else %}
             None
         {% endif %}
@@ -61,6 +67,8 @@
         None
     {% endif %}
 </td>
+
+
 
                         <td>
                             {% if container.status == 'running' %}
