@@ -55,5 +55,46 @@ def delete_container(id):
     container.remove()
     return redirect(url_for('index'))
 
+@app.route('/all/start')
+def start_all_containers():
+    containers = client.containers.list(all=True)
+    for container in containers:
+    	if container.status == 'exited':
+        	container.start()
+    return redirect(url_for('index'))
+
+@app.route('/all/stop')
+def stop_all_containers():
+    containers = client.containers.list(all=True)
+    for container in containers:
+        if container.status == 'running':	
+            container.stop()
+    return redirect(url_for('index'))
+
+@app.route('/all/pause')
+def pause_all_containers():
+    containers = client.containers.list(all=True)
+    for container in containers:
+        if container.status == 'running':
+            container.pause()
+    return redirect(url_for('index'))
+
+@app.route('/all/unpause')
+def unpause_all_containers():
+    containers = client.containers.list(all=True)
+    for container in containers:
+    	if container.status == 'paused':
+	        container.unpause()
+    return redirect(url_for('index'))
+
+@app.route('/all/delete')
+def delete_all_containers():
+    containers = client.containers.list(all=True)
+    for container in containers:
+        container.stop()
+        container.remove()
+    return redirect(url_for('index'))
+
 if __name__ == '__main__':
     app.run(debug=True)
+
