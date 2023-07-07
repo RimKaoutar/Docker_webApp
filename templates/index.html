@@ -36,6 +36,7 @@
                     <th>Name</th>
                     <th>Status</th>
                     <th>Image</th>
+                    <th>Port</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -46,9 +47,33 @@
                         <td>{{ container.status }}</td>
                         <td>{{ container.image }}</td>
                         <td>
+    {% if 'Ports' in container.attrs %}
+        {% set host_port = None %}
+        {% set found = false %}
+        {% for port, mappings in container.attrs.Ports.items() %}
+            {% if mappings and 'HostPort' in mappings[0] %}
+                {% if not found %}
+                    {% set host_port = mappings[0].HostPort %}
+                    {% set found = true %}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        {% if host_port %}
+            {{ host_port }}
+        {% else %}
+            None
+        {% endif %}
+    {% else %}
+        None
+    {% endif %}
+</td>
+
+
+
+                        <td>
                             {% if container.status == 'running' %}
                                 <a class="btn btn-danger" href="/stop/{{ container.id }}">Stop</a>
-                            {% elif container.status == 'exited' %}
+                            {% elif container.status == 'exited'  %}
                                 <a class="btn btn-success" href="/start/{{ container.id }}">Start</a>
                             {% endif %}
                             <a class="btn btn-secondary" href="/delete/{{ container.id }}">Delete</a>
