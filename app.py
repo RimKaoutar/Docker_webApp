@@ -38,15 +38,20 @@ def unpause_container(id):
 def create_container():
     image = request.form['image']
     name = request.form['name']
-    port = request.form['port']
+    
+    
     container = client.containers.create(
         image=image,
         name=name,
-        ports={'80/tcp': port},
+        stdin_open=True,
+        tty=True,
+        command=None,
         detach=True
     )
     container.start()
     return redirect(url_for('index'))
+
+
 
 @app.route('/delete/<id>')
 def delete_container(id):
@@ -67,6 +72,9 @@ def start_all_containers():
 def stop_all_containers():
     containers = client.containers.list(all=True)
     for container in containers:
+        if container.status == 'paused':
+	        container.unpause()
+	        container.stop()
         if container.status == 'running':	
             container.stop()
     return redirect(url_for('index'))
@@ -91,9 +99,15 @@ def unpause_all_containers():
 def delete_all_containers():
     containers = client.containers.list(all=True)
     for container in containers:
-        container.stop()
-        container.remove()
+        container_status = container.status
+        if container_status == 'running' or container_status == 'paused':
+            try:
+                container.stop()
+            except docker.errors.APIError:
+                pass
+        container.remove(force=True)
     return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

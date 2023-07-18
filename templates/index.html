@@ -29,6 +29,18 @@
 <body>
     <div class="container">
         <h1>Docker Manager</h1>
+        <h2>Actions for All Containers</h2>
+        <tr>
+            <td colspan="4">
+                <a class="btn btn-success" href="/all/start">Start All Containers</a>
+                <a class="btn btn-danger" href="/all/stop">Stop All Containers</a>
+                <a class="btn btn-warning" href="/all/pause">Pause All Containers</a>
+                <a class="btn btn-primary" href="/all/unpause">Resume All Containers</a>
+                <a class="btn btn-secondary" href="/all/delete">Delete All Containers</a>
+            </td>
+            <td><br/></td>
+         </tr>
+         <br/>
         <h2>All Containers</h2>
         <table class="table">
             <thead>
@@ -44,13 +56,13 @@
                     <tr>
                         <td>{{ container.name }}</td>
                         <td>{{ container.status }}</td>
-                        <td>{{ container.image }}</td>
+                        <td>{{ container.image.tags[0] }}</td>
                         <td>
                             {% if container.status == 'running' %}
                                 <a class="btn btn-danger" href="/stop/{{ container.id }}">Stop</a>
                                 <a class="btn btn-warning" href="/pause/{{ container.id }}">Pause</a>
                             {% elif container.status == 'paused' %}
-                                <a class="btn btn-success" href="/unpause/{{ container.id }}">Resume</a>
+                                <a class="btn btn-primary" href="/unpause/{{ container.id }}">Resume</a>
                             {% elif container.status == 'exited' %}
                                 <a class="btn btn-success" href="/start/{{ container.id }}">Start</a>
                             {% endif %}
@@ -58,15 +70,6 @@
                         </td>
                     </tr>
                 {% endfor %}
-                <tr>
-                    <td colspan="4">
-                        <a class="btn btn-success" href="/all/start">Start All Containers</a>
-                        <a class="btn btn-danger" href="/all/stop">Stop All Containers</a>
-                        <a class="btn btn-warning" href="/all/pause">Pause All Containers</a>
-                        <a class="btn btn-success" href="/all/unpause">Resume All Containers</a>
-                        <a class="btn btn-secondary" href="/all/delete">Delete All Containers</a>
-                    </td>
-                </tr>
             </tbody>
         </table>
         <h2>Create Container</h2>
@@ -82,10 +85,6 @@
             <div class="mb-3">
                 <label for="name" class="form-label">Name:</label>
                 <input type="text" id="name" name="name" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label for="port" class="form-label">Port:</label>
-                <input type="text" id="port" name="port" class="form-control">
             </div>
             <div class="mb-3">
                 <input type="submit" value="Create" class="btn btn-primary">
